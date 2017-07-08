@@ -3,4 +3,5 @@
     <string name="title_left">Write!</string>
     <string name="title_cetner">Look!</string>
     <string name="title_right">Log!</string>
+    <string name="push_button">Go</string>
 </resources>
