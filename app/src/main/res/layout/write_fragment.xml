@@ -1,37 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-
-    <de.timroes.android.listview.EnhancedListView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="90"
-        android:id="@+id/todolist">
-    </de.timroes.android.listview.EnhancedListView>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="10"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+
+        android:id="@+id/inputcomp"
+        android:layout_alignParentBottom="true"
         >
         <EditText
-            android:id="@+id/go_button"
+            android:id="@+id/inputText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="6"
-            android:focusedByDefault="true"
             android:hint="Input your ToDo right now!!"/>
         <Button
-            android:id="@+id/inputText"
+            android:id="@+id/go_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/push_button"/>
     </LinearLayout>
 
+    <de.timroes.android.listview.EnhancedListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/inputcomp"
+        android:id="@+id/todolist">
 
-</LinearLayout>
+    </de.timroes.android.listview.EnhancedListView>
+
+
+</RelativeLayout>
+
+<!--
+
+-->
