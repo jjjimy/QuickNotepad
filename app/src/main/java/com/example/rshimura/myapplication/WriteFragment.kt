@@ -11,6 +11,7 @@ import java.util.*
 import android.view.inputmethod.InputMethodManager.RESULT_UNCHANGED_SHOWN
 import android.view.KeyEvent.KEYCODE_ENTER
 import android.content.Context.INPUT_METHOD_SERVICE
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
@@ -20,6 +21,10 @@ import android.view.inputmethod.InputMethodManager
  * Created by rshimura on 2017/07/08.
  */
 public class WriteFragment : Fragment() {
+    private var v: View? = null
+    private var itemList: MutableList<Card>?  = null
+    private var listView: EnhancedListView?     = null
+    private var adapter : CardAdapter? = null
 
     companion object {
         fun getInstance(): Fragment {
@@ -28,59 +33,61 @@ public class WriteFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val v: View = inflater.inflate(R.layout.write_fragment, container, false)
+        v = inflater.inflate(R.layout.write_fragment, container, false)
 
-        val itemList: MutableList<String> = mutableListOf()
-        val listView: EnhancedListView      = v.findViewById(R.id.todolist) as EnhancedListView
-        val adapter : ArrayAdapter<String>  = ArrayAdapter<String>(v.context, android.R.layout.simple_list_item_1, itemList)
+        itemList = mutableListOf()
+        listView = v!!.findViewById(R.id.todolist) as EnhancedListView
+        adapter  = CardAdapter(v!!.context, R.layout.item_view, itemList!!)
 
-        defToDoListView(v, itemList, listView, adapter)
-        defListItemIO  (v, itemList, listView, adapter)
+        defToDoListView()
+        defListItemIO  ()
 
-        return v
+        return v!!
     }
 
-    private fun defToDoListView(v: View, itemList: MutableList<String>,
-                                listView: EnhancedListView, adapter: ArrayAdapter<String>): Unit {
+    private fun defToDoListView() {
         // for todo list view
-        listView.setAdapter(adapter)
-        listView.setRequireTouchBeforeDismiss(false)
-        listView.setUndoHideDelay(3000)
+        listView!!.setAdapter(adapter)
+        listView!!.setRequireTouchBeforeDismiss(false)
+        listView!!.setUndoHideDelay(3000)
 
-        listView.setDismissCallback { listView : EnhancedListView, pos : Int ->
-            val item = adapter.getItem(pos)
-            itemList.removeAt(pos)
-            adapter.notifyDataSetChanged()
+        listView!!.setDismissCallback { listView : EnhancedListView, pos : Int ->
+            val item = adapter!!.getItem(pos)
+            itemList!!.removeAt(pos)
+            adapter!!.notifyDataSetChanged()
             object : EnhancedListView.Undoable() {
                 public override fun undo() {
-                    itemList.add(pos, item)
-                    adapter.notifyDataSetChanged()
+                    itemList!!.add(pos, item!!)
+                    adapter!!.notifyDataSetChanged()
                 }
             }
         }
-        listView.enableSwipeToDismiss();
+        listView!!.enableSwipeToDismiss();
     }
 
-    private fun defListItemIO(v : View, itemList: MutableList<String>,
-                              listView: EnhancedListView, adapter: ArrayAdapter<String>): Unit {
-// input text and add list
-        val inputText: EditText = v.findViewById(R.id.inputText) as EditText
-        val goBtn    : Button   = v.findViewById(R.id.go_btn)    as Button
-        var clickedPosition : Int? = null
+    private fun defListItemIO() {
+        // input text and add list
+        val inputText: EditText = v!!.findViewById(R.id.inputText) as EditText
+        val goBtn    : Button   = v!!.findViewById(R.id.go_btn)    as Button
+        var editCard : Card?    = null
         // def btn action
         val pushToDo = {
-
             when (goBtn.text) {
                 "Go" -> {
                     var inputStr = inputText.text.toString()
-                    itemList.add(inputStr)
-                    adapter.notifyDataSetChanged()
+                    val date = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
+                    val inputCard : Card = Card(inputStr, date.toString())
+                    itemList!!.add(inputCard)
+                    adapter!!.notifyDataSetChanged()
                     inputText.setText("")
                 }
                 "Re" -> {
                     var inputStr = inputText.text.toString()
-                    itemList.set(clickedPosition!!, inputStr)
-                    adapter.notifyDataSetChanged()
+                    val date = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
+                    val old  = editCard!!.getDateStr()
+                    editCard!!.date = "$old => $date"
+                    editCard!!.todo = inputStr
+                    adapter!!.notifyDataSetChanged()
                     inputText.setText("")
                     goBtn.setText("Go")
                 }
@@ -88,11 +95,10 @@ public class WriteFragment : Fragment() {
         }
 
         // edit list
-        listView.setOnItemClickListener { parent, view, position, id ->
-            val item    = parent.getItemAtPosition(id.toInt())
-            val editStr = item.toString()
-            clickedPosition = position
-            inputText.setText(editStr)
+        listView!!.setOnItemClickListener { parent, view, position, id ->
+            var item    = parent.getItemAtPosition(position)
+            editCard    = item as Card
+            inputText.setText(editCard!!.getTodoStr())
             goBtn.setText("Re")
         }
         goBtn.setOnClickListener(View.OnClickListener { pushToDo() })
@@ -109,4 +115,10 @@ public class WriteFragment : Fragment() {
             }
         })
     }
+
+    public interface OnListChangeListener {
+        public fun onListChangeListener()
+        public fun onListChanged()
+    }
 }
+
