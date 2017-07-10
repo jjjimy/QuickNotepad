@@ -13,9 +13,11 @@ import android.widget.TextView
 class MainActivity : AppCompatActivity() {
 
     private val fragMgr: FragmentManager = fragmentManager
+/*
     private val listChangeListener = WriteFragment.OnListChangeListener {
         public on
     }
+    */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
