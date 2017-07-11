@@ -11,10 +11,16 @@ import java.util.*
 import android.view.inputmethod.InputMethodManager.RESULT_UNCHANGED_SHOWN
 import android.view.KeyEvent.KEYCODE_ENTER
 import android.content.Context.INPUT_METHOD_SERVICE
+import android.graphics.Canvas
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
+import android.support.v7.widget.RecyclerView
+
+
 
 
 /**
@@ -32,15 +38,40 @@ public class WriteFragment : Fragment() {
         val v: View = inflater.inflate(R.layout.write_fragment, container, false)
 
         val itemList: MutableList<Card> = mutableListOf()
-        val listView = v.findViewById(R.id.todolist) as EnhancedListView
-        val adapter  = CardAdapter(v.context, R.layout.item_view, itemList)
+        //val listView = v.findViewById(R.id.todolist) as EnhancedListView
+        val adapter  = RecylerCardAdapter(v.context, itemList)
 
-        defToDoListView(v, listView, adapter, itemList)
-        defListItemIO  (v, listView, adapter, itemList)
+        //defToDoListView(v, listView, adapter, itemList)
+        //defListItemIO  (v, listView, adapter, itemList)
+
+        val recyView : RecyclerView = v.findViewById(R.id.todolist) as RecyclerView
+        val layoutMgr: RecyclerView.LayoutManager = LinearLayoutManager(v.context)
+        recyView.setHasFixedSize(true)
+        recyView.layoutManager = layoutMgr
+        recyView.adapter = adapter
+
+
+
+        val swipeToActionHelper = ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
+            }
+
+            override fun onChildDrawOver(c: Canvas, recyclerView: RecyclerView,
+                                         viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float,
+                                         actionState: Int, isCurrentlyActive: Boolean) {
+            }
+        })
 
         return v
     }
 
+    /*
     private fun defToDoListView(v: View, listView: EnhancedListView,
                                 adapter: CardAdapter, itemList: MutableList<Card>) {
         // for todo list view
@@ -112,10 +143,7 @@ public class WriteFragment : Fragment() {
                 return false
             }
         })
-    }
+        */
 
-    public interface OnListChangedListener {
-        public fun onListChanged()
-    }
-}
+ }
 
