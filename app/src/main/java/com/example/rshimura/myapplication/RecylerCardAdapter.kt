@@ -31,8 +31,7 @@ public class RecylerCardAdapter(val context: Context, val cardList: List<Card>):
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val cardInfo: Card = getItem(position)
-        holder.todo.text = cardInfo.getTodoStr()
-        holder.date.text = cardInfo.getDateStr()
+        holder.setItem(cardInfo)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecylerCardAdapter.ViewHolder{
@@ -61,6 +60,13 @@ public class RecylerCardAdapter(val context: Context, val cardList: List<Card>):
             todo = v.findViewById(R.id.todo) as TextView
             date = v.findViewById(R.id.date) as TextView
         }
+
+        public fun setItem(card: Card){
+            todo.text = card.getTodoStr()
+            date.text = card.getTodoStr()
+        }
+
+
     }
 
 
