@@ -61,7 +61,11 @@ public class WriteFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 when(direction) {
-
+                    ItemTouchHelper.LEFT -> {
+                        val position = viewHolder.adapterPosition
+                        itemList.removeAt(position)
+                        adapter.notifyDataSetChanged()
+                    }
 
                 }
             }
@@ -72,6 +76,8 @@ public class WriteFragment : Fragment() {
             }
         })
 
+        swipeToActionHelper.attachToRecyclerView(recyView)
+
         return v
     }
 
@@ -80,80 +86,55 @@ public class WriteFragment : Fragment() {
         // input text and add list
         val inputText: EditText = v.findViewById(R.id.inputText) as EditText
         val goBtn: Button = v.findViewById(R.id.go_btn) as Button
-        var editCard: Card? = null
         // def btn action
-        val pushToDo = {
-            when (goBtn.text) {
-                "Go" -> {
-                    val inputStr = inputText.text.toString()
-                    val date = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
-                    val inputCard: Card = Card(inputStr, date.toString())
-                    itemList.add(inputCard)
-                    adapter.notifyDataSetChanged()
-                    inputText.setText("")
-                }
-                "Re" -> {
-                    val inputStr = inputText.text.toString()
-                    val date = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
-                    if (editCard != null){
-                        val old = editCard.getDateStr()
-                        editCard.date = "$old => $date"
-                        editCard.todo = inputStr
-                        adapter.notifyDataSetChanged()
-                        inputText.setText("")
-                        goBtn.setText("Go")
 
-                    }
-                }
-            }
-        }
-        val pushGo = {
+        val pushAction = { card: Card? ->
             val inputStr = inputText.text.toString()
-            val date = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
-            val inputCard: Card = Card(inputStr, date.toString())
-            itemList.add(inputCard)
-            adapter.notifyDataSetChanged()
-            inputText.setText("")
-        }
-        val pushRe = {
-            val inputStr = inputText.text.toString()
-            val date = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
-            if (editCard != null){
-                val old = editCard.getDateStr()
-                editCard.date = "$old => $date"
-                editCard.todo = inputStr
+            val currentDate = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
+            if (card == null){
+                val inputCard: Card = Card(inputStr, currentDate.toString())
+                itemList.add(inputCard)
                 adapter.notifyDataSetChanged()
+                inputText.setText("")
+            }
+            else {
+                if (card.todo != inputStr){
+                    val oldDate = card.getDateStr()
+                    card.date = "$oldDate => $currentDate"
+                    card.todo = inputStr
+                    adapter.notifyDataSetChanged()
+                }
                 inputText.setText("")
                 goBtn.setText("Go")
             }
         }
 
-        val onKeyListener = object : View.OnKeyListener {
-            override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
-                if (event.getAction() === KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    pushToDo()
-                    return true
+        val onKeyListener = { card: Card? ->
+            object : View.OnKeyListener {
+                override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
+                    if (event.getAction() === KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                        pushAction(card)
+                        return true
+                    }
+                    return false
                 }
-                return false
             }
         }
 
+
         // add list
-        goBtn.setOnClickListener { pushGo() }
-        inputText.setOnKeyListener(onKeyListener)
+        goBtn.setOnClickListener { pushAction(null) }
+        inputText.setOnKeyListener(onKeyListener(null))
         // edit list
         val onItemClickListener = object : RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
-                val editCard: Card = view as Card
-                //val editCard = item as Card
+                val editCard: Card = adapter.getItem(position)
                 inputText.setText(editCard.getTodoStr())
                 goBtn.setText("Re")
-                goBtn.setOnClickListener   { pushRe()    }
-                inputText.setOnKeyListener(onKeyListener)
+                goBtn.setOnClickListener   { pushAction(editCard) }
+                inputText.setOnKeyListener(onKeyListener(editCard))
             }
-
             override fun onLongItemClick(view: View, position: Int) {
-
             }
         }
         recyView.addOnItemTouchListener(RecyclerItemClickListener(v.context, recyView, onItemClickListener))
@@ -181,56 +162,6 @@ public class WriteFragment : Fragment() {
         listView.enableSwipeToDismiss();
     }
 
-    private fun defListItemIO(v: View, listView: EnhancedListView,
-                              adapter: CardAdapter, itemList: MutableList<Card>) {
-        // input text and add list
-        val inputText: EditText = v.findViewById(R.id.inputText) as EditText
-        val goBtn    : Button   = v.findViewById(R.id.go_btn)    as Button
-        var editCard : Card?    = null
-        // def btn action
-        val pushToDo = {
-            when (goBtn.text) {
-                "Go" -> {
-                    val inputStr = inputText.text.toString()
-                    val date = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
-                    val inputCard : Card = Card(inputStr, date.toString())
-                    itemList.add(inputCard)
-                    adapter.notifyDataSetChanged()
-                    inputText.setText("")
-                }
-                "Re" -> {
-                    val inputStr = inputText.text.toString()
-                    val date = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
-                    val old  = editCard!!.getDateStr()
-                    editCard!!.date = "$old => $date"
-                    editCard!!.todo = inputStr
-                    adapter.notifyDataSetChanged()
-                    inputText.setText("")
-                    goBtn.setText("Go")
-                }
-            }
-        }
-
-        // edit list
-        listView.setOnItemClickListener { parent, view, position, id ->
-            val item    = parent.getItemAtPosition(position)
-            editCard    = item as Card
-            inputText.setText(editCard!!.getTodoStr())
-            goBtn.setText("Re")
-        }
-        goBtn.setOnClickListener(View.OnClickListener { pushToDo() })
-        // when enter is clicked, push todo
-        inputText.setOnKeyListener(object : View.OnKeyListener {
-
-            override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
-
-                if (event.getAction() === KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    pushToDo()
-                    return true
-                }
-                return false
-            }
-        })
         */
 
 }
