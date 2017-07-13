@@ -29,7 +29,7 @@ import android.support.v7.widget.RecyclerView
  */
 public class WriteFragment : Fragment() {
 
-    private var cardChangeListener: OnCardChangeListener? = null
+    //private var cardChangeListener: OnCardChangeListener? = null
 
     companion object {
         fun getInstance(): Fragment {
@@ -49,14 +49,15 @@ public class WriteFragment : Fragment() {
 
         return v
     }
-
+/*
     override fun onAttach(context: Context?) {
-        cardChangeListener = context as OnCardChangeListener
+        //cardChangeListener = context as OnCardChangeListener
     }
 
     override fun onDetach() {
-        cardChangeListener = null
+        //cardChangeListener = null
     }
+    */
 
     private fun defListener(v: View, recyView: RecyclerView,
                               adapter: RecylerCardAdapter, itemList: MutableList<Card>) {
@@ -65,9 +66,10 @@ public class WriteFragment : Fragment() {
         val goBtn: Button = v.findViewById(R.id.go_btn) as Button
         // def btn action
 
-        val pushAction = { card: Card? ->
+        var pushAction = { card: Card? ->
             val inputStr = inputText.text.toString()
             val currentDate = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
+            Log.d("CARD", card.toString())
             if (card == null){
                 val inputCard: Card = Card(inputStr, currentDate.toString())
                 itemList.add(inputCard)
@@ -100,7 +102,7 @@ public class WriteFragment : Fragment() {
 
 
         // add list
-        goBtn.setOnClickListener { pushAction(null) }
+        goBtn.setOnClickListener { pushAction(null); Log.d("ONCLICK", "yeeah") }
         inputText.setOnKeyListener(onKeyListener(null))
         // edit list
         val onItemClickListener = object : RecyclerItemClickListener.OnItemClickListener {
@@ -109,7 +111,7 @@ public class WriteFragment : Fragment() {
                 inputText.setText(editCard.getTodoStr())
                 goBtn.setText("Re")
                 goBtn.setOnClickListener   { pushAction(editCard) }
-                inputText.setOnKeyListener(onKeyListener(editCard))
+                //inputText.setOnKeyListener(onKeyListener(editCard))
             }
             override fun onLongItemClick(view: View, position: Int) {
             }
@@ -137,7 +139,7 @@ public class WriteFragment : Fragment() {
                         val position = viewHolder.adapterPosition
                         itemList.removeAt(position)
                         adapter.notifyDataSetChanged()
-                        cardChangeListener?.onCardDeleted()
+                        //cardChangeListener?.onCardDeleted()
                     }
 
                 }
@@ -151,7 +153,7 @@ public class WriteFragment : Fragment() {
 
         swipeToActionHelper.attachToRecyclerView(recyView)
     }
-
+/*
     public interface OnCardChangeListener {
 
         public fun onCardCreated(){
@@ -171,6 +173,6 @@ public class WriteFragment : Fragment() {
         }
 
     }
-
+*/
 }
 

@@ -11,14 +11,10 @@ import android.widget.EditText
 import android.widget.TextView
 
 
-class MainActivity : AppCompatActivity(), WriteFragment.OnCardChangeListener {
+class MainActivity : AppCompatActivity() {
 
     private val fragMgr: FragmentManager = fragmentManager
-/*
-    private val listChangeListener = WriteFragment.OnListChangeListener {
-        public on
-    }
-    */
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,11 +43,10 @@ class MainActivity : AppCompatActivity(), WriteFragment.OnCardChangeListener {
         }
 
     }
-
+/*
     override fun onCardCreated() {
 
     }
-
     override fun onCardDeleted() {
         val logFragment: LogFragment = fragMgr.findFragmentById(R.id.fragmentContainer) as LogFragment
         logFragment.pushLog("DEL")
@@ -60,7 +55,7 @@ class MainActivity : AppCompatActivity(), WriteFragment.OnCardChangeListener {
     override fun onCardRevised() {
 
     }
-
+*/
 }
 
 
