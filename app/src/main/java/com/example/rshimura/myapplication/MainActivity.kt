@@ -1,5 +1,6 @@
 package com.example.rshimura.myapplication
 
+import android.app.Fragment
 import android.app.FragmentManager
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -10,7 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), WriteFragment.OnCardChangeListener {
 
     private val fragMgr: FragmentManager = fragmentManager
 /*
@@ -45,6 +46,18 @@ class MainActivity : AppCompatActivity() {
             false
         }
 
+    }
+
+    override fun onCardCreated() {
+
+    }
+
+    override fun onCardDeleted() {
+        val logFragment: LogFragment = fragMgr.findFragmentById(R.id.fragmentContainer) as LogFragment
+        logFragment.pushLog("DEL")
+    }
+
+    override fun onCardRevised() {
 
     }
 
