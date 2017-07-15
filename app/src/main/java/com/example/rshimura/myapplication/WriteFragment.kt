@@ -29,7 +29,7 @@ import android.support.v7.widget.RecyclerView
  */
 public class WriteFragment : Fragment() {
 
-    //private var cardChangeListener: OnCardChangeListener? = null
+    private var cardChangeListener: OnCardChangeListener? = null
 
     companion object {
         fun getInstance(): Fragment {
@@ -49,15 +49,16 @@ public class WriteFragment : Fragment() {
 
         return v
     }
-/*
+
     override fun onAttach(context: Context?) {
-        //cardChangeListener = context as OnCardChangeListener
+        super.onAttach(context)
+        cardChangeListener = context as OnCardChangeListener
+    }
+    override fun onDetach() {
+        super.onDetach()
+        cardChangeListener = null
     }
 
-    override fun onDetach() {
-        //cardChangeListener = null
-    }
-    */
 
     private fun defListener(v: View, recyView: RecyclerView,
                               adapter: RecylerCardAdapter, itemList: MutableList<Card>) {
@@ -74,6 +75,7 @@ public class WriteFragment : Fragment() {
                 val inputCard: Card = Card(inputStr, currentDate.toString())
                 itemList.add(inputCard)
                 adapter.notifyDataSetChanged()
+                cardChangeListener?.onCardCreated()
                 inputText.setText("")
             }
             else {
@@ -82,6 +84,7 @@ public class WriteFragment : Fragment() {
                     card.date = "$oldDate => $currentDate"
                     card.todo = inputStr
                     adapter.notifyDataSetChanged()
+                    cardChangeListener?.onCardRevised()
                 }
                 inputText.setText("")
                 goBtn.setText("Go")
@@ -139,7 +142,14 @@ public class WriteFragment : Fragment() {
                         val position = viewHolder.adapterPosition
                         itemList.removeAt(position)
                         adapter.notifyDataSetChanged()
-                        //cardChangeListener?.onCardDeleted()
+                        cardChangeListener?.onCardDeleted()
+                    }
+                    ItemTouchHelper.RIGHT -> {
+                        val position = viewHolder.adapterPosition
+                        val card = adapter.getItem(position) as Card
+                        itemList.removeAt(position)
+                        adapter.notifyDataSetChanged()
+                        cardChangeListener?.onCardArchived(card)
                     }
 
                 }
@@ -153,26 +163,18 @@ public class WriteFragment : Fragment() {
 
         swipeToActionHelper.attachToRecyclerView(recyView)
     }
-/*
+
     public interface OnCardChangeListener {
 
-        public fun onCardCreated(){
+        public fun onCardCreated()
 
-        }
+        public fun onCardDeleted()
 
-        public fun onCardDeleted(){
+        public fun onCardRevised()
 
-        }
-
-        public fun onCardRevised(){
-
-        }
-
-        public fun onCardArchived(){
-
-        }
+        public fun onCardArchived(card: Card?)
 
     }
-*/
+
 }
 

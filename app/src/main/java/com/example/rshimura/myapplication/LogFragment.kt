@@ -2,18 +2,21 @@ package com.example.rshimura.myapplication
 
 import android.os.Bundle
 import android.app.Fragment
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ListAdapter
 import android.widget.ListView
+import java.util.*
 
 /**
  * Created by rshimura on 2017/07/08.
  */
 public class LogFragment : Fragment() {
 
-    var v: View? = null
+
     private var adapter: ArrayAdapter<String>? = null
     private var logView : ListView? = null
     private var itemList: MutableList<String>? = null
@@ -25,24 +28,36 @@ public class LogFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        v =  inflater.inflate(R.layout.log_fragment, container, false)
+        val v: View =  inflater.inflate(R.layout.log_fragment, container, false)
 
         itemList  = mutableListOf()
         adapter   = ArrayAdapter<String>(v?.context, android.R.layout.simple_list_item_1, itemList)
         logView   = v?.findViewById(R.id.log) as ListView
 
-        logView?.adapter = adapter
+        logView?.adapter = adapter as ListAdapter
+
+        adapter?.notifyDataSetChanged()
 
 
-        return inflater.inflate(R.layout.log_fragment, container, false)
+        return v
     }
 
     public fun pushLog(mode: String){
+        val date = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance()).toString()
         when (mode){
             "DEL" -> {
-                itemList?.add("delete")
-                adapter?.notifyDataSetChanged()
+                itemList?.add("Delete @$date")
+            }
+            "CRE" -> {
+                itemList?.add("Create @$date")
+            }
+            "ARC" -> {
+                itemList?.add("Archive @$date")
+            }
+            "REV" -> {
+                itemList?.add("Revise @$date")
             }
         }
+        adapter?.notifyDataSetChanged()
     }
 }

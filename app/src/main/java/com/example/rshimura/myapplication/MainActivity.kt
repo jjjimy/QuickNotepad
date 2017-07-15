@@ -1,61 +1,73 @@
 package com.example.rshimura.myapplication
 
-import android.app.Fragment
 import android.app.FragmentManager
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.VectorEnabledTintResources
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.TextView
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity() : AppCompatActivity(), WriteFragment.OnCardChangeListener{
 
     private val fragMgr: FragmentManager = fragmentManager
-
-
+    private val writeFrag = WriteFragment()
+    private val archFrag = LookFragment()
+    private val logFrag   = LogFragment()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        fragMgr.beginTransaction().replace(R.id.fragmentContainer, WriteFragment.getInstance() ).commit()
-
         val navigation = findViewById(R.id.navigation) as BottomNavigationView
-        //navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        fragMgr.beginTransaction().add(R.id.fragmentContainer, writeFrag, "write")
+                                  .add(R.id.fragmentContainer, archFrag, "look")
+                                  .add(R.id.fragmentContainer, logFrag  , "log")
+                                  .hide(archFrag)
+                                  .hide(logFrag)
+                                  .commit()
 
         navigation.setOnNavigationItemSelectedListener { item ->
+            if(writeFrag.isVisible){
+                fragMgr.beginTransaction().hide(writeFrag).commit()
+            }
+            if(archFrag.isVisible){
+                fragMgr.beginTransaction().hide(archFrag).commit()
+            }
+            if(logFrag.isVisible){
+                fragMgr.beginTransaction().hide(logFrag).commit()
+            }
             when (item.itemId){
                 R.id.navigation_home -> {
-                    fragMgr.beginTransaction().replace(R.id.fragmentContainer, WriteFragment.getInstance() ).commit()
+                    fragMgr.beginTransaction().show(writeFrag).commit()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_dashboard -> {
-                    fragMgr.beginTransaction().replace(R.id.fragmentContainer, LookFragment.getInstance() ).commit()
+                    fragMgr.beginTransaction().show(archFrag).commit()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_notifications -> {
-                    fragMgr.beginTransaction().replace(R.id.fragmentContainer, LogFragment.getInstance() ).commit()
+                    fragMgr.beginTransaction().show(logFrag).commit()
                     return@setOnNavigationItemSelectedListener true
                 }
             }
             false
         }
-
     }
-/*
-    override fun onCardCreated() {
 
+    override fun onCardCreated() {
+        logFrag.pushLog("CRE")
     }
     override fun onCardDeleted() {
-        val logFragment: LogFragment = fragMgr.findFragmentById(R.id.fragmentContainer) as LogFragment
-        logFragment.pushLog("DEL")
+        logFrag.pushLog("DEL")
     }
 
     override fun onCardRevised() {
-
+        logFrag.pushLog("REV")
     }
-*/
+
+    override fun onCardArchived(card: Card?) {
+        archFrag.archiveThisCard(card)
+        logFrag.pushLog("ARC")
+    }
+
+
 }
 
 
