@@ -45,7 +45,7 @@ public class WriteFragment : Fragment() {
         val recyView : RecyclerView = v.findViewById(R.id.todolist) as RecyclerView
 
         defSwipeAction(v, recyView, adapter, itemList)
-        defListener(v, recyView, adapter, itemList)
+        defListAction(v, recyView, adapter, itemList)
 
         return v
     }
@@ -60,18 +60,18 @@ public class WriteFragment : Fragment() {
     }
 
 
-    private fun defListener(v: View, recyView: RecyclerView,
+    private fun defListAction(v: View, recyView: RecyclerView,
                               adapter: RecylerCardAdapter, itemList: MutableList<Card>) {
         // input text and add list
         val inputText: EditText = v.findViewById(R.id.inputText) as EditText
         val goBtn: Button = v.findViewById(R.id.go_btn) as Button
+        var editCard: Card? = null
         // def btn action
 
-        var pushAction = { card: Card? ->
+        var pushAction = {
             val inputStr = inputText.text.toString()
             val currentDate = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
-            Log.d("CARD", card.toString())
-            if (card == null){
+            if (editCard == null){
                 val inputCard: Card = Card(inputStr, currentDate.toString())
                 itemList.add(inputCard)
                 adapter.notifyDataSetChanged()
@@ -79,6 +79,7 @@ public class WriteFragment : Fragment() {
                 inputText.setText("")
             }
             else {
+                val card = editCard as Card
                 if (card.todo != inputStr){
                     val oldDate = card.getDateStr()
                     card.date = "$oldDate => $currentDate"
@@ -86,16 +87,18 @@ public class WriteFragment : Fragment() {
                     adapter.notifyDataSetChanged()
                     cardChangeListener?.onCardRevised()
                 }
+                editCard = null
                 inputText.setText("")
                 goBtn.setText("Go")
             }
+            recyView.scrollToPosition(adapter.getTailIndex())
         }
 
         val onKeyListener = { card: Card? ->
             object : View.OnKeyListener {
                 override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
                     if (event.getAction() === KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                        pushAction(card)
+                        pushAction()
                         return true
                     }
                     return false
@@ -105,18 +108,19 @@ public class WriteFragment : Fragment() {
 
 
         // add list
-        goBtn.setOnClickListener { pushAction(null); Log.d("ONCLICK", "yeeah") }
+        goBtn.setOnClickListener { pushAction(); Log.d("ONCLICK", "yeeah") }
         inputText.setOnKeyListener(onKeyListener(null))
         // edit list
         val onItemClickListener = object : RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
-                val editCard: Card = adapter.getItem(position)
-                inputText.setText(editCard.getTodoStr())
+                val card: Card = adapter.getItem(position)
+                inputText.setText(card.getTodoStr())
+                editCard = card
                 goBtn.setText("Re")
-                goBtn.setOnClickListener   { pushAction(editCard) }
-                //inputText.setOnKeyListener(onKeyListener(editCard))
             }
+
             override fun onLongItemClick(view: View, position: Int) {
+
             }
         }
         recyView.addOnItemTouchListener(RecyclerItemClickListener(v.context, recyView, onItemClickListener))

@@ -51,6 +51,10 @@ public class RecylerCardAdapter(val context: Context, val cardList: List<Card>):
         return cardList.lastIndex.toLong()
     }
 
+    fun getTailIndex(): Int {
+        return cardList.lastIndex
+    }
+
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         private val todo: TextView
         private val date: TextView
