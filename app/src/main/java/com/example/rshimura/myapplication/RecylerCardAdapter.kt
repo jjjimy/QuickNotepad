@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.nineoldandroids.view.ViewHelper
+//import com.nineoldandroids.view.ViewHelper
 import org.w3c.dom.Text
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.widget.TextView

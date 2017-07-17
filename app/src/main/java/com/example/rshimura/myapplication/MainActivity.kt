@@ -1,14 +1,15 @@
 package com.example.rshimura.myapplication
 
-import android.app.FragmentManager
+import android.support.v4.app.FragmentManager
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 
 
 class MainActivity() : AppCompatActivity(), WriteFragment.OnCardChangeListener{
 
-    private val fragMgr: FragmentManager = fragmentManager
+    private val fragMgr: FragmentManager = supportFragmentManager
     private val writeFrag = WriteFragment()
     private val archFrag = LookFragment()
     private val logFrag   = LogFragment()
@@ -52,9 +53,11 @@ class MainActivity() : AppCompatActivity(), WriteFragment.OnCardChangeListener{
     }
 
     override fun onCardCreated() {
+        Log.d("ONLISTCHANGE", "CRE")
         logFrag.pushLog("CRE")
     }
     override fun onCardDeleted() {
+        Log.d("ONLISTCHANGE", "DEL")
         logFrag.pushLog("DEL")
     }
 
@@ -64,6 +67,7 @@ class MainActivity() : AppCompatActivity(), WriteFragment.OnCardChangeListener{
 
     override fun onCardArchived(card: Card?) {
         archFrag.archiveThisCard(card)
+        Log.d("ONLISTCHANGE", "ARC")
         logFrag.pushLog("ARC")
     }
 

@@ -1,13 +1,12 @@
 package com.example.rshimura.myapplication
 
 import android.os.Bundle
-import android.app.Fragment
+import android.support.v4.app.Fragment
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import de.timroes.android.listview.EnhancedListView
 import java.util.*
 import android.view.inputmethod.InputMethodManager.RESULT_UNCHANGED_SHOWN
 import android.view.KeyEvent.KEYCODE_ENTER
