@@ -143,6 +143,8 @@ public class WriteFragment : Fragment() {
                 when(direction) {
                     ItemTouchHelper.LEFT -> {
                         val position = viewHolder.adapterPosition
+                        val view = viewHolder as RecylerCardAdapter.ViewHolder
+
                         itemList.removeAt(position)
                         adapter.notifyDataSetChanged()
                         cardChangeListener?.onCardDeleted()

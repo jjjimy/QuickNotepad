@@ -68,6 +68,10 @@ public class RecylerCardAdapter(val context: Context, val cardList: List<Card>):
             date.text = card.getDateStr()
         }
 
+        public fun setDeleteBg() {
+
+        }
+
 
     }
 
