@@ -10,19 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+
+
         <android.support.v7.widget.CardView
             android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             card_view:cardCornerRadius="4dp"
             android:layout_margin="10dp">
-
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#f0f0f0">
-
                 <TextView
                     android:id="@+id/todo"
                     android:textSize="20dp"
@@ -31,33 +31,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
-
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
             android:id="@+id/delete_mode_fil"
+            android:layout_alignParentTop="true"
+            android:layout_alignBottom="@+id/cardView"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            card_view:cardCornerRadius="4dp"
-            android:layout_margin="10dp">
-            <LinearLayout
-                android:orientation="vertical"
+            card_view:cardCornerRadius="4dp">
+            <TextView
+                android:text="DEL"
+                android:textSize="40dp"
+                android:layout_margin="5dp"
+                android:gravity="center_horizontal|center_vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#10ff0000">
-<!---
-                <TextView
-                    android:text="DEL"
-                    android:textSize="40dp"
-                    android:background="#00ffffff"
-                    android:layout_margin="5dp"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-                    -->
-            </LinearLayout>
+                android:layout_height="match_parent"
+                android:background="#50ff0000"
+                android:layout_weight="1" />
         </android.support.v7.widget.CardView>
     </RelativeLayout>
 
