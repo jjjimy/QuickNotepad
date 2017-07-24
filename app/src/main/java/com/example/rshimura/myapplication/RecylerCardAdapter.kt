@@ -58,9 +58,11 @@ public class RecylerCardAdapter(val context: Context, val cardList: List<Card>):
     class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         private val todo: TextView
         private val date: TextView
+        private val delFil: View
         init {
             todo = v.findViewById(R.id.todo) as TextView
             date = v.findViewById(R.id.date) as TextView
+            delFil = v.findViewById(R.id.delete_mode_fil) as View
         }
 
         public fun setItem(card: Card){
@@ -69,7 +71,7 @@ public class RecylerCardAdapter(val context: Context, val cardList: List<Card>):
         }
 
         public fun setDeleteBg() {
-
+            delFil.visibility = View.VISIBLE
         }
 
 
