@@ -134,8 +134,13 @@ public class WriteFragment : Fragment() {
         recyView.layoutManager = layoutMgr
         recyView.adapter = adapter
 
-        val swipeToActionHelper = ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        val swipeToActionHelper = ItemTouchHelper(object: ItemTouchHelper.Callback() {
+            override fun getMovementFlags(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?): Int {
+                return  makeFlag(ItemTouchHelper.ACTION_STATE_IDLE,  ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) or
+                        makeFlag(ItemTouchHelper.ACTION_STATE_SWIPE, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) or
+                        makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,  ItemTouchHelper.UP   or ItemTouchHelper.DOWN)
+            }
+
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
                 val fromPos  = viewHolder.adapterPosition
                 val toPos    = target.adapterPosition
