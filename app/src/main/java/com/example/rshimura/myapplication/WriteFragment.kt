@@ -119,6 +119,7 @@ public class WriteFragment : Fragment() {
             }
 
             override fun onLongItemClick(view: View, position: Int) {
+                val card = adapter.getItem(position) as Card
 
             }
         }
@@ -134,9 +135,12 @@ public class WriteFragment : Fragment() {
         recyView.adapter = adapter
 
         val swipeToActionHelper = ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                return false
+                val fromPos  = viewHolder.adapterPosition
+                val toPos    = target.adapterPosition
+                adapter.notifyItemMoved(fromPos, toPos)
+                return true
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -144,7 +148,7 @@ public class WriteFragment : Fragment() {
                     ItemTouchHelper.LEFT -> {
                         val position = viewHolder.adapterPosition
                         val view = viewHolder as RecylerCardAdapter.ViewHolder
-                        view.setDeleteBg()
+                        //view.setDeleteBg()
                         itemList.removeAt(position)
                         adapter.notifyDataSetChanged()
                         cardChangeListener?.onCardDeleted()
@@ -152,7 +156,7 @@ public class WriteFragment : Fragment() {
                     ItemTouchHelper.RIGHT -> {
                         val position = viewHolder.adapterPosition
                         val card = adapter.getItem(position) as Card
-                        (viewHolder as RecylerCardAdapter.ViewHolder).setDeleteBg()
+                        //(viewHolder as RecylerCardAdapter.ViewHolder).setDeleteBg()
                         itemList.removeAt(position)
                         adapter.notifyDataSetChanged()
                         cardChangeListener?.onCardArchived(card)
