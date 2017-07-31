@@ -55,26 +55,45 @@ public class RecylerCardAdapter(val context: Context, val cardList: List<Card>):
         return cardList.lastIndex
     }
 
-    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+    class ViewHolder(var v: View) : RecyclerView.ViewHolder(v) {
+        //public var itemView = v
         private val todo: TextView
         private val date: TextView
-        private val delFil: View
+        //private val delFil: View
+        //private val movFil: View
+        //private val arcFil: View
         init {
             todo = v.findViewById(R.id.todo) as TextView
             date = v.findViewById(R.id.date) as TextView
-            delFil = v.findViewById(R.id.delete_mode_fil) as View
+            //delFil = v.findViewById(R.id.delete_mode_fil)
+            //movFil = v.findViewById(R.id.move_mode_fil)
+            //arcFil = v.findViewById(R.id.archive_mode_fil)
         }
 
-        public fun setItem(card: Card){
+        fun setItem(card: Card){
             todo.text = card.getTodoStr()
             date.text = card.getDateStr()
         }
-
-        public fun setDeleteBg() {
+/*
+        fun setDeleteFilter() {
             delFil.visibility = View.VISIBLE
         }
 
+        fun setArchiveFilter() {
+            arcFil.visibility = View.VISIBLE
+        }
 
+        fun setMoveFilter(){
+            movFil.visibility = View.VISIBLE
+        }
+        fun hideFilter(){
+            movFil.visibility = View.INVISIBLE
+            delFil.visibility = View.INVISIBLE
+            arcFil.visibility = View.INVISIBLE
+        }
+
+        fun getX(): Float = v.x
+*/
     }
 
 

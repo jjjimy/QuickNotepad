@@ -19,6 +19,14 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchUIUtil
+import android.support.v4.content.ContextCompat
+import android.graphics.drawable.Drawable
+import android.support.v4.view.ViewCompat.setTranslationX
+import android.support.v4.view.ViewCompat.setAlpha
+import android.opengl.ETC1.getWidth
+
+
 
 
 
@@ -134,12 +142,14 @@ public class WriteFragment : Fragment() {
         recyView.layoutManager = layoutMgr
         recyView.adapter = adapter
 
-        val swipeToActionHelper = ItemTouchHelper(object: ItemTouchHelper.Callback() {
+        val swipeToActionHelper = ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN or ItemTouchHelper.UP,  ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT) {
+            /*
             override fun getMovementFlags(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?): Int {
                 return  makeFlag(ItemTouchHelper.ACTION_STATE_IDLE,  ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) or
                         makeFlag(ItemTouchHelper.ACTION_STATE_SWIPE, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) or
                         makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,  ItemTouchHelper.UP   or ItemTouchHelper.DOWN)
             }
+            */
 
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
                 val fromPos  = viewHolder.adapterPosition
@@ -168,6 +178,44 @@ public class WriteFragment : Fragment() {
                     }
 
                 }
+            }
+
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                super.onSelectedChanged(viewHolder, actionState)
+                //if (actionState == ItemTouchHelper.ACTION_STATE_DRAG)
+                    //(viewHolder as RecylerCardAdapter.ViewHolder).setMoveFilter()
+            }
+
+            override fun onChildDraw(c: Canvas?, recyclerView: RecyclerView?,
+                                     viewHolder: RecyclerView.ViewHolder?,
+                                     dX: Float, dY: Float, actionState: Int,
+                                     isCurrentlyActive: Boolean) {
+                /*
+                val itemView = (viewHolder as RecylerCardAdapter.ViewHolder).itemView
+                val d = ContextCompat.getDrawable(v.context, R.layout.delete_back)
+                d.setBounds(itemView.left, itemView.top, dX as Int, itemView.bottom)
+                d.draw(c)
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                */
+                val vh = viewHolder as RecylerCardAdapter.ViewHolder
+                if (actionState === ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    //val d = ContextCompat.getDrawable(v.context, R.layout.delete_back)
+                    //d.setBounds(vh.itemView.getLeft(), vh.itemView.getTop(), dX as Int, vh.itemView.getBottom())
+                    //d.draw(c)
+                    c?.
+                    viewHolder.itemView.translationX = dX
+                    Log.d("IF", "enter IF dx:$dX")
+                } else {
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                }
+
+
+            }
+
+            override fun clearView(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?) {
+                super.clearView(recyclerView, viewHolder)
+                //(viewHolder as RecylerCardAdapter.ViewHolder).hideFilter()
             }
 
             override fun onChildDrawOver(c: Canvas, recyclerView: RecyclerView,
