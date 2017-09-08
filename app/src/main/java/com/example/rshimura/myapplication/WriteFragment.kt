@@ -179,7 +179,7 @@ public class WriteFragment : Fragment() {
 
                 }
             }
-
+            /*
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
                 super.onSelectedChanged(viewHolder, actionState)
                 //if (actionState == ItemTouchHelper.ACTION_STATE_DRAG)
@@ -190,14 +190,15 @@ public class WriteFragment : Fragment() {
                                      viewHolder: RecyclerView.ViewHolder?,
                                      dX: Float, dY: Float, actionState: Int,
                                      isCurrentlyActive: Boolean) {
-                /*
+
                 val itemView = (viewHolder as RecylerCardAdapter.ViewHolder).itemView
                 val d = ContextCompat.getDrawable(v.context, R.layout.delete_back)
                 d.setBounds(itemView.left, itemView.top, dX as Int, itemView.bottom)
                 d.draw(c)
 
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                */
+
+                /*
                 val vh = viewHolder as RecylerCardAdapter.ViewHolder
                 if (actionState === ItemTouchHelper.ACTION_STATE_SWIPE) {
                     //val d = ContextCompat.getDrawable(v.context, R.layout.delete_back)
@@ -209,6 +210,7 @@ public class WriteFragment : Fragment() {
                 } else {
                     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                 }
+                */
 
 
             }
@@ -217,7 +219,7 @@ public class WriteFragment : Fragment() {
                 super.clearView(recyclerView, viewHolder)
                 //(viewHolder as RecylerCardAdapter.ViewHolder).hideFilter()
             }
-
+            */
             override fun onChildDrawOver(c: Canvas, recyclerView: RecyclerView,
                                          viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float,
                                          actionState: Int, isCurrentlyActive: Boolean) {
