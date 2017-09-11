@@ -36,7 +36,7 @@ import android.opengl.ETC1.getWidth
  */
 public class WriteFragment : Fragment() {
 
-    private var cardChangeListener: OnCardChangeListener? = null
+    private var cardChangeListener: OnWriteCardChangeListener? = null
 
     companion object {
         fun getInstance(): Fragment {
@@ -59,7 +59,7 @@ public class WriteFragment : Fragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        cardChangeListener = context as OnCardChangeListener
+        cardChangeListener = context as OnWriteCardChangeListener
     }
     override fun onDetach() {
         super.onDetach()
@@ -82,7 +82,7 @@ public class WriteFragment : Fragment() {
                 val inputCard: Card = Card(inputStr, currentDate.toString())
                 itemList.add(inputCard)
                 adapter.notifyDataSetChanged()
-                cardChangeListener?.onCardCreated()
+                cardChangeListener?.onWriteCardCreated()
                 inputText.setText("")
             }
             else {
@@ -92,7 +92,7 @@ public class WriteFragment : Fragment() {
                     card.date = "$oldDate => $currentDate"
                     card.todo = inputStr
                     adapter.notifyDataSetChanged()
-                    cardChangeListener?.onCardRevised()
+                    cardChangeListener?.onWriteCardRevised()
                 }
                 editCard = null
                 inputText.setText("")
@@ -166,7 +166,7 @@ public class WriteFragment : Fragment() {
                         //view.setDeleteBg()
                         itemList.removeAt(position)
                         adapter.notifyDataSetChanged()
-                        cardChangeListener?.onCardDeleted()
+                        cardChangeListener?.onWriteCardDeleted()
                     }
                     ItemTouchHelper.RIGHT -> {
                         val position = viewHolder.adapterPosition
@@ -174,7 +174,7 @@ public class WriteFragment : Fragment() {
                         //(viewHolder as RecylerCardAdapter.ViewHolder).setDeleteBg()
                         itemList.removeAt(position)
                         adapter.notifyDataSetChanged()
-                        cardChangeListener?.onCardArchived(card)
+                        cardChangeListener?.onWriteCardArchived(card)
                     }
 
                 }
@@ -229,17 +229,18 @@ public class WriteFragment : Fragment() {
         swipeToActionHelper.attachToRecyclerView(recyView)
     }
 
-    public interface OnCardChangeListener {
+    public interface OnWriteCardChangeListener {
 
-        public fun onCardCreated()
+        public fun onWriteCardCreated()
 
-        public fun onCardDeleted()
+        public fun onWriteCardDeleted()
 
-        public fun onCardRevised()
+        public fun onWriteCardRevised()
 
-        public fun onCardArchived(card: Card?)
+        public fun onWriteCardArchived(card: Card?)
 
     }
+
 
 }
 

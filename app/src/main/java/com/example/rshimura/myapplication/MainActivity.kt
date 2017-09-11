@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 
 
-class MainActivity() : AppCompatActivity(), WriteFragment.OnCardChangeListener{
+class MainActivity() : AppCompatActivity(), WriteFragment.OnWriteCardChangeListener{
 
     private val fragMgr: FragmentManager = supportFragmentManager
     private val writeFrag = WriteFragment()
@@ -52,20 +52,20 @@ class MainActivity() : AppCompatActivity(), WriteFragment.OnCardChangeListener{
         }
     }
 
-    override fun onCardCreated() {
+    override fun onWriteCardCreated() {
         Log.d("ONLISTCHANGE", "CRE")
         logFrag.pushLog("CRE")
     }
-    override fun onCardDeleted() {
+    override fun onWriteCardDeleted() {
         Log.d("ONLISTCHANGE", "DEL")
         logFrag.pushLog("DEL")
     }
 
-    override fun onCardRevised() {
+    override fun onWriteCardRevised() {
         logFrag.pushLog("REV")
     }
 
-    override fun onCardArchived(card: Card?) {
+    override fun onWriteCardArchived(card: Card?) {
         archFrag.archiveThisCard(card)
         Log.d("ONLISTCHANGE", "ARC")
         logFrag.pushLog("ARC")

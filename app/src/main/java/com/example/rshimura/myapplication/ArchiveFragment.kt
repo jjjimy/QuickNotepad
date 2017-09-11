@@ -1,5 +1,6 @@
 package com.example.rshimura.myapplication
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -18,6 +19,7 @@ public class LookFragment : Fragment() {
     private val itemList: MutableList<Card> = mutableListOf()
     private var adapter : RecyclerView.Adapter<RecylerCardAdapter.ViewHolder>? = null
     private var recyView: RecyclerView? = null
+    private var cardChangeListener: OnArchiveCardChangeListener? = null
     companion object {
         fun getInstance(): Fragment {
             return LookFragment() as Fragment
@@ -38,6 +40,17 @@ public class LookFragment : Fragment() {
         return v
     }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        cardChangeListener = context as OnArchiveCardChangeListener
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        cardChangeListener = null
+    }
+
+
     public fun archiveThisCard(card: Card?){
         if(card != null){
 
@@ -48,4 +61,17 @@ public class LookFragment : Fragment() {
             adapter?.notifyDataSetChanged()
         }
     }
+
+    public interface OnArchiveCardChangeListener {
+
+        public fun onArchiveCardCreated()
+
+        public fun onArchiveCardDeleted()
+
+        public fun onArchiveCardRevised()
+
+        public fun onArchiveCardArchived(card: Card?)
+
+    }
+
 }
