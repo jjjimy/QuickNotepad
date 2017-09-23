@@ -179,47 +179,6 @@ public class WriteFragment : Fragment() {
 
                 }
             }
-            /*
-            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-                super.onSelectedChanged(viewHolder, actionState)
-                //if (actionState == ItemTouchHelper.ACTION_STATE_DRAG)
-                    //(viewHolder as RecylerCardAdapter.ViewHolder).setMoveFilter()
-            }
-
-            override fun onChildDraw(c: Canvas?, recyclerView: RecyclerView?,
-                                     viewHolder: RecyclerView.ViewHolder?,
-                                     dX: Float, dY: Float, actionState: Int,
-                                     isCurrentlyActive: Boolean) {
-
-                val itemView = (viewHolder as RecylerCardAdapter.ViewHolder).itemView
-                val d = ContextCompat.getDrawable(v.context, R.layout.delete_back)
-                d.setBounds(itemView.left, itemView.top, dX as Int, itemView.bottom)
-                d.draw(c)
-
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-
-                /*
-                val vh = viewHolder as RecylerCardAdapter.ViewHolder
-                if (actionState === ItemTouchHelper.ACTION_STATE_SWIPE) {
-                    //val d = ContextCompat.getDrawable(v.context, R.layout.delete_back)
-                    //d.setBounds(vh.itemView.getLeft(), vh.itemView.getTop(), dX as Int, vh.itemView.getBottom())
-                    //d.draw(c)
-                    c?.
-                    viewHolder.itemView.translationX = dX
-                    Log.d("IF", "enter IF dx:$dX")
-                } else {
-                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                }
-                */
-
-
-            }
-
-            override fun clearView(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?) {
-                super.clearView(recyclerView, viewHolder)
-                //(viewHolder as RecylerCardAdapter.ViewHolder).hideFilter()
-            }
-            */
             override fun onChildDrawOver(c: Canvas, recyclerView: RecyclerView,
                                          viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float,
                                          actionState: Int, isCurrentlyActive: Boolean) {
@@ -228,6 +187,7 @@ public class WriteFragment : Fragment() {
 
         swipeToActionHelper.attachToRecyclerView(recyView)
     }
+
 
     public interface OnWriteCardChangeListener {
 

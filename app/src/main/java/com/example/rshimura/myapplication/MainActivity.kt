@@ -7,7 +7,9 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 
 
-class MainActivity() : AppCompatActivity(), WriteFragment.OnWriteCardChangeListener{
+
+class MainActivity() : AppCompatActivity(), WriteFragment.OnWriteCardChangeListener, LookFragment.OnArchiveCardChangeListener {
+
 
     private val fragMgr: FragmentManager = supportFragmentManager
     private val writeFrag = WriteFragment()
@@ -52,6 +54,7 @@ class MainActivity() : AppCompatActivity(), WriteFragment.OnWriteCardChangeListe
         }
     }
 
+    // writeFragment Event
     override fun onWriteCardCreated() {
         Log.d("ONLISTCHANGE", "CRE")
         logFrag.pushLog("CRE")
@@ -71,7 +74,14 @@ class MainActivity() : AppCompatActivity(), WriteFragment.OnWriteCardChangeListe
         logFrag.pushLog("ARC")
     }
 
+    // archiveFragment Event
+    override fun onArchiveCardDearchived() {
+        logFrag.pushLog("DAR")
+    }
 
+    override fun onArchiveCardDeleted() {
+        logFrag.pushLog("DEL")
+    }
 }
 
 

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
@@ -40,6 +41,7 @@ public class LookFragment : Fragment() {
         return v
     }
 
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         cardChangeListener = context as OnArchiveCardChangeListener
@@ -50,10 +52,31 @@ public class LookFragment : Fragment() {
         cardChangeListener = null
     }
 
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        when(direction) {
+            ItemTouchHelper.LEFT -> {
+                val position = viewHolder.adapterPosition
+                val view = viewHolder as RecylerCardAdapter.ViewHolder
+                //view.setDeleteBg()
+                itemList.removeAt(position)
+                adapter.notifyDataSetChanged()
+                cardChangeListener?.onWriteCardDeleted()
+            }
+            ItemTouchHelper.RIGHT -> {
+                val position = viewHolder.adapterPosition
+                val card = adapter.getItem(position) as Card
+                //(viewHolder as RecylerCardAdapter.ViewHolder).setDeleteBg()
+                itemList.removeAt(position)
+                adapter.notifyDataSetChanged()
+                cardChangeListener?.onWriteCardArchived(card)
+            }
+
+        }
+    }
+
 
     public fun archiveThisCard(card: Card?){
         if(card != null){
-
             val currentDate = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
             val oldDate = card.getDateStr()
             card.date = "$oldDate => $currentDate"
@@ -64,13 +87,10 @@ public class LookFragment : Fragment() {
 
     public interface OnArchiveCardChangeListener {
 
-        public fun onArchiveCardCreated()
+        public fun onArchiveCardDearchived()
 
         public fun onArchiveCardDeleted()
 
-        public fun onArchiveCardRevised()
-
-        public fun onArchiveCardArchived(card: Card?)
 
     }
 

@@ -57,6 +57,9 @@ public class LogFragment : Fragment() {
             "REV" -> {
                 itemList?.add("Revise @$date")
             }
+            "DAR" -> {
+                itemList?.add("Dearchive @$date")
+            }
         }
         adapter?.notifyDataSetChanged()
     }
