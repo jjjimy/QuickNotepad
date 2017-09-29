@@ -1,4 +1,4 @@
-package com.example.rshimura.myapplication;
+package com.example.rshimura.quicknotepad;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

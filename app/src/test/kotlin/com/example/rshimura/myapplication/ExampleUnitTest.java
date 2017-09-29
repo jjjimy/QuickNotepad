@@ -1,4 +1,4 @@
-package com.example.rshimura.myapplication;
+package com.example.rshimura.quicknotepad;
 
 import org.junit.Test;
 
