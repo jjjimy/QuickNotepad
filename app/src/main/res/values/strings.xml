@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Quick Notepad</string>
     <string name="title_left">Write!</string>
     <string name="title_cetner">Look!</string>
     <string name="title_right">Log!</string>
