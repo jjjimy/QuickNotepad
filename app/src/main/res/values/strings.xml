@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">Quick Notepad</string>
-    <string name="title_left">Write!</string>
-    <string name="title_cetner">Look!</string>
-    <string name="title_right">Log!</string>
+    <string name="title_left">Write</string>
+    <string name="title_cetner">Archive</string>
+    <string name="title_right">Log</string>
     <string name="push_button">Go</string>
-    <string name="action_search">Serch...</string>
+    <string name="action_search">Search...</string>
+    <string name="action_settings">settings</string>
 </resources>

@@ -5,15 +5,16 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.util.Log
-
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.support.v4.view.MenuItemCompat
+import android.support.v7.widget.SearchView
 
 
 class MainActivity() : AppCompatActivity(), WriteFragment.OnWriteCardChangeListener, LookFragment.OnArchiveCardChangeListener {
-
-
-
-
 
     private val fragMgr: FragmentManager = supportFragmentManager
     private val writeFrag = WriteFragment()
@@ -22,6 +23,9 @@ class MainActivity() : AppCompatActivity(), WriteFragment.OnWriteCardChangeListe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val myToolbar = findViewById(R.id.my_toolbar) as Toolbar
+        setSupportActionBar(myToolbar)
+        myToolbar.setBackgroundResource(R.drawable.memo_header)
         val navigation = findViewById(R.id.navigation) as BottomNavigationView
         fragMgr.beginTransaction().add(R.id.fragmentContainer, writeFrag, "write")
                                   .add(R.id.fragmentContainer, archFrag, "look")
@@ -29,16 +33,6 @@ class MainActivity() : AppCompatActivity(), WriteFragment.OnWriteCardChangeListe
                                   .hide(archFrag)
                                   .hide(logFrag)
                                   .commit()
-        /*
-        /* タイトル */
-        getSupportActionBar().setTitle("タイトル")
-
-        /* ロゴ画像を出す */
-        getSupportActionBar().setDisplayShowHomeEnabled(true)
-        getSupportActionBar().setDisplayUseLogoEnabled(true)
-        /* アイコン変える */
-        getSupportActionBar().setLogo(R.drawable.ic_launcher)
-        */
 
         navigation.setOnNavigationItemSelectedListener { item ->
             if(writeFrag.isVisible){
@@ -52,19 +46,50 @@ class MainActivity() : AppCompatActivity(), WriteFragment.OnWriteCardChangeListe
             }
             when (item.itemId){
                 R.id.navigation_home -> {
+                    myToolbar.setBackgroundResource(R.drawable.memo_header)
                     fragMgr.beginTransaction().show(writeFrag).commit()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_dashboard -> {
+                    myToolbar.setBackgroundResource((R.drawable.archive_header))
                     fragMgr.beginTransaction().show(archFrag).commit()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_notifications -> {
+                    myToolbar.setBackgroundResource(R.drawable.log_header)
                     fragMgr.beginTransaction().show(logFrag).commit()
                     return@setOnNavigationItemSelectedListener true
                 }
             }
             false
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.actionbar, menu)
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = MenuItemCompat.getActionView(searchItem) as SearchView
+        searchView.setBackgroundResource(R.drawable.search_header)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+            R.id.action_settings ->
+                // User chose the "Settings" item, show the app settings UI...
+                return true
+
+            R.id.action_search ->
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+
+                return true
+
+            else ->
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item)
         }
     }
 

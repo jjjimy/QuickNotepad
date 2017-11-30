@@ -4,23 +4,17 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/navi_ic_memo"
+        android:icon="@drawable/ic_create_black_48px"
         android:title="@string/title_left"/>
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/navi_ic_memo"
+        android:icon="@drawable/ic_archive_black_48px"
         android:title="@string/title_cetner"/>
 
     <item
         android:id="@+id/navigation_notifications"
-        android:icon="@drawable/navi_ic_log"
+        android:icon="@drawable/ic_dehaze_black_48px"
         android:title="@string/title_right"/>
-
-    <item android:id="@+id/action_search"
-        android:title="@string/action_search"
-        android:icon="@drawable/ic_home_black_24dp"
-        app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="android.support.v7.widget.SearchView" />
 
 </menu>

@@ -82,7 +82,7 @@ public class WriteFragment : Fragment() {
                 }
                 editCard = null
                 inputText.setText("")
-                goBtn.setText("Go")
+                //goBtn.setText("Go")
             }
             recyView.scrollToPosition(adapter?.getTailIndex()!!)
         }
@@ -109,7 +109,7 @@ public class WriteFragment : Fragment() {
                 val card: Card? = adapter?.getItem(position)
                 inputText.setText(card?.getTodoStr())
                 editCard = card
-                goBtn.setText("Re")
+                //goBtn.setText("Re")
             }
 
             override fun onLongItemClick(view: View, position: Int) {
