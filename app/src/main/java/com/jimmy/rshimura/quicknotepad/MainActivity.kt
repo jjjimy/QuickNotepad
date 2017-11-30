@@ -3,12 +3,16 @@ package com.jimmy.rshimura.quicknotepad
 import android.support.v4.app.FragmentManager
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 
 
 
 class MainActivity() : AppCompatActivity(), WriteFragment.OnWriteCardChangeListener, LookFragment.OnArchiveCardChangeListener {
+
+
+
 
 
     private val fragMgr: FragmentManager = supportFragmentManager
@@ -25,6 +29,16 @@ class MainActivity() : AppCompatActivity(), WriteFragment.OnWriteCardChangeListe
                                   .hide(archFrag)
                                   .hide(logFrag)
                                   .commit()
+        /*
+        /* タイトル */
+        getSupportActionBar().setTitle("タイトル")
+
+        /* ロゴ画像を出す */
+        getSupportActionBar().setDisplayShowHomeEnabled(true)
+        getSupportActionBar().setDisplayUseLogoEnabled(true)
+        /* アイコン変える */
+        getSupportActionBar().setLogo(R.drawable.ic_launcher)
+        */
 
         navigation.setOnNavigationItemSelectedListener { item ->
             if(writeFrag.isVisible){
