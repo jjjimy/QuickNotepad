@@ -74,8 +74,6 @@ public class WriteFragment : Fragment() {
             else {
                 val card = editCard as Card
                 if (card.todo != inputStr){
-                    val oldDate = card.getDateStr()
-                    card.date = "$oldDate => $currentDate"
                     card.todo = inputStr
                     adapter?.notifyDataSetChanged()
                     cardChangeListener?.onWriteCardRevised()
