@@ -38,7 +38,6 @@ public class LookFragment : Fragment() {
         recyView?.adapter = adapter
 
         defSwipeAction(v, recyView)
-
         return v
     }
 

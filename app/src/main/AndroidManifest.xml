@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" >
         <activity
-            android:name=".MainActivity"
+            android:name="com.jimmy.rshimura.quicknotepad.MainActivity"
             android:label="" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
