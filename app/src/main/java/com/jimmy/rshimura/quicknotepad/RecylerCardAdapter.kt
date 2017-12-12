@@ -16,7 +16,8 @@ import android.widget.TextView
 /**
  * Created by rshimura on 2017/07/09.
  */
-public class RecylerCardAdapter(val context: Context, val cardList: List<Card>): RecyclerView.Adapter<RecylerCardAdapter.ViewHolder>() {
+public class RecylerCardAdapter(val context: Context, val cardList: List<Card>, val cardLayout: Int):
+        RecyclerView.Adapter<RecylerCardAdapter.ViewHolder>() {
     private val inflater: LayoutInflater
 
     init {
@@ -29,7 +30,7 @@ public class RecylerCardAdapter(val context: Context, val cardList: List<Card>):
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecylerCardAdapter.ViewHolder{
-        val v: View = inflater.inflate(R.layout.item_view, parent, false)
+        val v: View = inflater.inflate(cardLayout, parent, false)
         val viewholder: ViewHolder = ViewHolder(v)
         return viewholder
     }

@@ -35,7 +35,7 @@ public class WriteFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val v: View = inflater.inflate(R.layout.write_fragment, container, false)
 
-        adapter  = RecylerCardAdapter(v.context, itemList)
+        adapter  = RecylerCardAdapter(v.context, itemList, R.layout.item_view)
         val recyView : RecyclerView = v.findViewById(R.id.todolist) as RecyclerView
 
         defSwipeAction(v, recyView)
@@ -77,6 +77,7 @@ public class WriteFragment : Fragment() {
                     card.todo = inputStr
                     adapter?.notifyDataSetChanged()
                     cardChangeListener?.onWriteCardRevised()
+                    card.date = currentDate.toString()
                 }
                 editCard = null
                 inputText.setText("")
@@ -176,7 +177,7 @@ public class WriteFragment : Fragment() {
         if(card != null){
             val currentDate = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
             val oldDate = card.getDateStr()
-            card.date = "$oldDate => $currentDate"
+            card.date = "$currentDate"
             itemList.add(card)
             adapter?.notifyDataSetChanged()
         }

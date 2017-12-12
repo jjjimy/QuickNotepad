@@ -29,7 +29,7 @@ public class LookFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val v: View = inflater.inflate(R.layout.archive_fragment, container, false)
-        adapter = RecylerCardAdapter(v.context, itemList)
+        adapter = RecylerCardAdapter(v.context, itemList, R.layout.item_view_archive)
         var recyView: RecyclerView = v.findViewById(R.id.archivelist) as RecyclerView
 
         val layoutMgr: RecyclerView.LayoutManager = LinearLayoutManager(v.context)
@@ -57,8 +57,7 @@ public class LookFragment : Fragment() {
     public fun archiveThisCard(card: Card?){
         if(card != null){
             val currentDate = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
-            val oldDate = card.getDateStr()
-            card.date = "$oldDate => $currentDate"
+            card.date = currentDate.toString()
             itemList.add(card)
             adapter?.notifyDataSetChanged()
         }
