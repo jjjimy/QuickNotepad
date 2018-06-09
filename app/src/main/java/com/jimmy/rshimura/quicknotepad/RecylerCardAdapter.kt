@@ -12,7 +12,6 @@ import android.widget.TextView
 
 
 
-
 /**
  * Created by rshimura on 2017/07/09.
  */
@@ -69,63 +68,7 @@ public class RecylerCardAdapter(val context: Context, val cardList: List<Card>, 
             todo.text = card.getTodoStr()
             date.text = card.getDateStr()
         }
-/*
-        fun setDeleteFilter() {
-            delFil.visibility = View.VISIBLE
-        }
-
-        fun setArchiveFilter() {
-            arcFil.visibility = View.VISIBLE
-        }
-
-        fun setMoveFilter(){
-            movFil.visibility = View.VISIBLE
-        }
-        fun hideFilter(){
-            movFil.visibility = View.INVISIBLE
-            delFil.visibility = View.INVISIBLE
-            arcFil.visibility = View.INVISIBLE
-        }
-
-        fun getX(): Float = v.x
-*/
-    }
-
-
-
-
-/*
-    override fun getItem(position: Int): Card? {
-        return cardList[position]
-    }
-
-    override  fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var cv = convertView
-        val viewHolder: ViewHolder
-
-        if (convertView == null) {
-            cv = LayoutInflater.from(context).inflate(R.layout.item_view, null)
-            viewHolder = ViewHolder(cv)
-            cv!!.tag = viewHolder
-        } else {
-            viewHolder = cv!!.tag as ViewHolder
-        }
-        val cardInfo: Card? = getItem(position)
-        viewHolder.todo!!.setText(cardInfo!!.getTodoStr())
-        viewHolder.date!!.setText(cardInfo!!.getDateStr())
-
-        return cv
-    }
-
-    private inner class ViewHolder(view: View) {
-        var todo: TextView? = null
-        var date: TextView? = null
-
-        init {
-            todo = view.findViewById(R.id.todo) as TextView
-            date = view.findViewById(R.id.date) as TextView
-        }
 
     }
-    */
+
 }

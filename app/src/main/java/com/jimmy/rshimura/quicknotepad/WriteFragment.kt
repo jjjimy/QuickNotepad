@@ -15,6 +15,15 @@ import android.text.format.DateFormat
 import android.util.Log
 import android.view.KeyEvent
 import android.support.v7.widget.RecyclerView
+import android.widget.Toast
+import android.support.design.widget.SwipeDismissBehavior
+import android.support.design.widget.CoordinatorLayout;
+
+
+
+
+
+
 
 
 /**
@@ -126,14 +135,10 @@ public class WriteFragment : Fragment() {
         recyView.layoutManager = layoutMgr
         recyView.adapter = adapter
 
-        val swipeToActionHelper = ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN or ItemTouchHelper.UP,  ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT) {
-            /*
-            override fun getMovementFlags(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?): Int {
-                return  makeFlag(ItemTouchHelper.ACTION_STATE_IDLE,  ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) or
-                        makeFlag(ItemTouchHelper.ACTION_STATE_SWIPE, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) or
-                        makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,  ItemTouchHelper.UP   or ItemTouchHelper.DOWN)
-            }
-            */
+        // implement swipe action
+        val swipeToActionHelper = ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.DOWN or ItemTouchHelper.UP,
+                ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT) {
 
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
                 val fromPos  = viewHolder.adapterPosition
@@ -168,6 +173,7 @@ public class WriteFragment : Fragment() {
                                          actionState: Int, isCurrentlyActive: Boolean) {
             }
         })
+
 
         swipeToActionHelper.attachToRecyclerView(recyView)
     }
