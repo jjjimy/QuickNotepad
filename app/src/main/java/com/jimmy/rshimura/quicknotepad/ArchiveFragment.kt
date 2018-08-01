@@ -27,7 +27,9 @@ public class LookFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?): View {
         val v: View = inflater.inflate(R.layout.archive_fragment, container, false)
         adapter = RecylerCardAdapter(v.context, itemList, R.layout.item_view_archive)
         var recyView: RecyclerView = v.findViewById(R.id.archivelist) as RecyclerView
@@ -73,16 +75,13 @@ public class LookFragment : Fragment() {
         recyView.layoutManager = layoutMgr
         recyView.adapter = adapter
 
-        val swipeToActionHelper = ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN or ItemTouchHelper.UP,  ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT) {
-            /*
-            override fun getMovementFlags(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?): Int {
-                return  makeFlag(ItemTouchHelper.ACTION_STATE_IDLE,  ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) or
-                        makeFlag(ItemTouchHelper.ACTION_STATE_SWIPE, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) or
-                        makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,  ItemTouchHelper.UP   or ItemTouchHelper.DOWN)
-            }
-            */
+        val swipeToActionHelper = ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.DOWN or ItemTouchHelper.UP,
+                ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT) {
 
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            override fun onMove(recyclerView: RecyclerView,
+                                viewHolder: RecyclerView.ViewHolder,
+                                    target: RecyclerView.ViewHolder): Boolean {
                 val fromPos  = viewHolder.adapterPosition
                 val toPos    = target.adapterPosition
                 adapter?.notifyItemMoved(fromPos, toPos)

@@ -3,6 +3,7 @@ package com.jimmy.rshimura.quicknotepad
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.content.Context
+import android.content.Context.MODE_APPEND
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,12 +19,10 @@ import android.support.v7.widget.RecyclerView
 import android.widget.Toast
 import android.support.design.widget.SwipeDismissBehavior
 import android.support.design.widget.CoordinatorLayout;
-
-
-
-
-
-
+import java.io.BufferedWriter
+import java.io.IOException
+import java.io.OutputStream
+import java.io.OutputStreamWriter
 
 
 /**
@@ -41,7 +40,9 @@ public class WriteFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?): View {
         val v: View = inflater.inflate(R.layout.write_fragment, container, false)
 
         adapter  = RecylerCardAdapter(v.context, itemList, R.layout.item_view)
@@ -78,6 +79,15 @@ public class WriteFragment : Fragment() {
                 itemList.add(inputCard)
                 adapter?.notifyDataSetChanged()
                 cardChangeListener?.onWriteCardCreated()
+                try {
+                    val stream = v.context.openFileOutput("current_list.dat", MODE_APPEND)
+                    val streamWriter = OutputStreamWriter(stream)
+                    val writer = BufferedWriter(streamWriter)
+                    writer.append(inputStr)
+                    writer.close()
+                }catch (e: IOException){
+                    e.printStackTrace()
+                }
                 inputText.setText("")
             }
             else {
@@ -107,7 +117,6 @@ public class WriteFragment : Fragment() {
             }
         }
 
-
         // add list
         goBtn.setOnClickListener { pushAction(); Log.d("ONCLICK", "yeeah") }
         inputText.setOnKeyListener(onKeyListener(null))
@@ -122,7 +131,6 @@ public class WriteFragment : Fragment() {
 
             override fun onLongItemClick(view: View, position: Int) {
                 val card = adapter?.getItem(position) as Card
-
             }
         }
         recyView.addOnItemTouchListener(RecyclerItemClickListener(v.context, recyView, onItemClickListener))
@@ -140,7 +148,9 @@ public class WriteFragment : Fragment() {
                 ItemTouchHelper.DOWN or ItemTouchHelper.UP,
                 ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT) {
 
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            override fun onMove(recyclerView: RecyclerView,
+                                viewHolder: RecyclerView.ViewHolder,
+                                target: RecyclerView.ViewHolder): Boolean {
                 val fromPos  = viewHolder.adapterPosition
                 val toPos    = target.adapterPosition
                 adapter?.notifyItemMoved(fromPos, toPos)
