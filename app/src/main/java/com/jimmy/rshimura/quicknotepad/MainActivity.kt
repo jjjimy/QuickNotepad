@@ -14,7 +14,7 @@ import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.SearchView
 
 
-class MainActivity() : AppCompatActivity(), WriteFragment.OnWriteCardChangeListener, LookFragment.OnArchiveCardChangeListener {
+class MainActivity() : AppCompatActivity(){
 
     private val fragMgr: FragmentManager = supportFragmentManager
     private val writeFrag = WriteFragment()
@@ -23,6 +23,8 @@ class MainActivity() : AppCompatActivity(), WriteFragment.OnWriteCardChangeListe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Toolbar setting
         val myToolbar = findViewById(R.id.my_toolbar) as Toolbar
         setSupportActionBar(myToolbar)
         myToolbar.setBackgroundResource(R.drawable.memo_header)
@@ -63,6 +65,41 @@ class MainActivity() : AppCompatActivity(), WriteFragment.OnWriteCardChangeListe
             }
             false
         }
+
+        //implement onCardChangeListener
+        writeFrag.setOnWriteCardChangeListener(object: WriteFragment.OnWriteCardChangeListener {
+            // writeFragment Event
+            override fun onWriteCardCreated() {
+                Log.d("ONLISTCHANGE", "CRE")
+                logFrag.pushLog("CRE")
+            }
+            override fun onWriteCardDeleted() {
+                Log.d("ONLISTCHANGE", "DEL")
+                logFrag.pushLog("DEL")
+            }
+
+            override fun onWriteCardRevised() {
+                logFrag.pushLog("REV")
+            }
+
+            override fun onWriteCardArchived(card: Card?) {
+                archFrag.archiveThisCard(card)
+                Log.d("ONLISTCHANGE", "ARC")
+                logFrag.pushLog("ARC")
+            }
+        })
+        archFrag.setOnArchiveCardChangeListener(object: LookFragment.OnArchiveCardChangeListener{
+            // archiveFragment Event
+            override fun onArchiveCardDearchived(card: Card?) {
+                writeFrag.deArchiveThisCard(card)
+                logFrag.pushLog("DAR")
+            }
+
+            override fun onArchiveCardDeleted() {
+                logFrag.pushLog("DEL")
+            }
+        })
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -93,35 +130,9 @@ class MainActivity() : AppCompatActivity(), WriteFragment.OnWriteCardChangeListe
         }
     }
 
-    // writeFragment Event
-    override fun onWriteCardCreated() {
-        Log.d("ONLISTCHANGE", "CRE")
-        logFrag.pushLog("CRE")
-    }
-    override fun onWriteCardDeleted() {
-        Log.d("ONLISTCHANGE", "DEL")
-        logFrag.pushLog("DEL")
-    }
 
-    override fun onWriteCardRevised() {
-        logFrag.pushLog("REV")
-    }
 
-    override fun onWriteCardArchived(card: Card?) {
-        archFrag.archiveThisCard(card)
-        Log.d("ONLISTCHANGE", "ARC")
-        logFrag.pushLog("ARC")
-    }
 
-    // archiveFragment Event
-    override fun onArchiveCardDearchived(card: Card?) {
-        writeFrag.deArchiveThisCard(card)
-        logFrag.pushLog("DAR")
-    }
-
-    override fun onArchiveCardDeleted() {
-        logFrag.pushLog("DEL")
-    }
 }
 
 

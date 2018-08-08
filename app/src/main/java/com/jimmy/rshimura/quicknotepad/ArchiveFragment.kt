@@ -43,12 +43,12 @@ public class LookFragment : Fragment() {
         return v
     }
 
-
+    /*
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         cardChangeListener = context as OnArchiveCardChangeListener
     }
-
+    */
     override fun onDetach() {
         super.onDetach()
         cardChangeListener = null
@@ -117,12 +117,15 @@ public class LookFragment : Fragment() {
         swipeToActionHelper.attachToRecyclerView(recyView)
     }
 
+    fun setOnArchiveCardChangeListener(listener: OnArchiveCardChangeListener){
+        cardChangeListener = listener
+    }
 
-    public interface OnArchiveCardChangeListener {
+    interface OnArchiveCardChangeListener {
 
-        public fun onArchiveCardDearchived(card: Card?)
+        fun onArchiveCardDearchived(card: Card?)
 
-        public fun onArchiveCardDeleted()
+        fun onArchiveCardDeleted()
 
 
     }

@@ -23,6 +23,7 @@ import java.io.BufferedWriter
 import java.io.IOException
 import java.io.OutputStream
 import java.io.OutputStreamWriter
+import java.security.Key
 
 
 /**
@@ -53,11 +54,12 @@ public class WriteFragment : Fragment() {
 
         return v
     }
-
+    /*
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         cardChangeListener = context as OnWriteCardChangeListener
     }
+    */
     override fun onDetach() {
         super.onDetach()
         cardChangeListener = null
@@ -71,7 +73,7 @@ public class WriteFragment : Fragment() {
         var editCard: Card? = null
         // def btn action
 
-        var pushAction = {
+        val pushAction = { v: View ->
             val inputStr = inputText.text.toString()
             val currentDate = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
             if (editCard == null){
@@ -105,21 +107,18 @@ public class WriteFragment : Fragment() {
             recyView.scrollToPosition(adapter?.getTailIndex()!!)
         }
 
-        val onKeyListener = { card: Card? ->
-            object : View.OnKeyListener {
-                override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
-                    if (event.getAction() === KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                        pushAction()
-                        return true
-                    }
-                    return false
+
+        val enterAction = l@{ v: View, keyCode: Int, event: KeyEvent ->
+                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    pushAction
+                    return@l true
                 }
-            }
+                false
         }
 
         // add list
-        goBtn.setOnClickListener { pushAction(); Log.d("ONCLICK", "yeeah") }
-        inputText.setOnKeyListener(onKeyListener(null))
+        goBtn.setOnClickListener(pushAction)
+        inputText.setOnKeyListener(enterAction)
         // edit list
         val onItemClickListener = object : RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
@@ -189,7 +188,7 @@ public class WriteFragment : Fragment() {
     }
 
 
-    public fun deArchiveThisCard(card: Card?){
+    fun deArchiveThisCard(card: Card?){
         if(card != null){
             val currentDate = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
             val oldDate = card.getDateStr()
@@ -199,15 +198,19 @@ public class WriteFragment : Fragment() {
         }
     }
 
-    public interface OnWriteCardChangeListener {
+    fun setOnWriteCardChangeListener (listener: OnWriteCardChangeListener){
+        cardChangeListener = listener
+    }
 
-        public fun onWriteCardCreated()
+    interface OnWriteCardChangeListener {
 
-        public fun onWriteCardDeleted()
+        fun onWriteCardCreated()
 
-        public fun onWriteCardRevised()
+        fun onWriteCardDeleted()
 
-        public fun onWriteCardArchived(card: Card?)
+        fun onWriteCardRevised()
+
+        fun onWriteCardArchived(card: Card?)
 
     }
 
