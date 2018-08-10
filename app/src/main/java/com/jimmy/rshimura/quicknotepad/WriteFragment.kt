@@ -3,6 +3,7 @@ package com.jimmy.rshimura.quicknotepad
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.content.Context
+import android.content.Context.MODE_APPEND
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,12 +19,11 @@ import android.support.v7.widget.RecyclerView
 import android.widget.Toast
 import android.support.design.widget.SwipeDismissBehavior
 import android.support.design.widget.CoordinatorLayout;
-
-
-
-
-
-
+import java.io.BufferedWriter
+import java.io.IOException
+import java.io.OutputStream
+import java.io.OutputStreamWriter
+import java.security.Key
 
 
 /**
@@ -41,7 +41,9 @@ public class WriteFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?): View {
         val v: View = inflater.inflate(R.layout.write_fragment, container, false)
 
         adapter  = RecylerCardAdapter(v.context, itemList, R.layout.item_view)
@@ -52,11 +54,12 @@ public class WriteFragment : Fragment() {
 
         return v
     }
-
+    /*
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         cardChangeListener = context as OnWriteCardChangeListener
     }
+    */
     override fun onDetach() {
         super.onDetach()
         cardChangeListener = null
@@ -70,7 +73,7 @@ public class WriteFragment : Fragment() {
         var editCard: Card? = null
         // def btn action
 
-        var pushAction = {
+        val pushAction = { v: View ->
             val inputStr = inputText.text.toString()
             val currentDate = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
             if (editCard == null){
@@ -78,6 +81,15 @@ public class WriteFragment : Fragment() {
                 itemList.add(inputCard)
                 adapter?.notifyDataSetChanged()
                 cardChangeListener?.onWriteCardCreated()
+                try {
+                    val stream = v.context.openFileOutput("current_list.dat", MODE_APPEND)
+                    val streamWriter = OutputStreamWriter(stream)
+                    val writer = BufferedWriter(streamWriter)
+                    writer.append(inputStr)
+                    writer.close()
+                }catch (e: IOException){
+                    e.printStackTrace()
+                }
                 inputText.setText("")
             }
             else {
@@ -95,22 +107,18 @@ public class WriteFragment : Fragment() {
             recyView.scrollToPosition(adapter?.getTailIndex()!!)
         }
 
-        val onKeyListener = { card: Card? ->
-            object : View.OnKeyListener {
-                override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
-                    if (event.getAction() === KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                        pushAction()
-                        return true
-                    }
-                    return false
+
+        val enterAction = l@{ v: View, keyCode: Int, event: KeyEvent ->
+                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    pushAction
+                    return@l true
                 }
-            }
+                false
         }
 
-
         // add list
-        goBtn.setOnClickListener { pushAction(); Log.d("ONCLICK", "yeeah") }
-        inputText.setOnKeyListener(onKeyListener(null))
+        goBtn.setOnClickListener(pushAction)
+        inputText.setOnKeyListener(enterAction)
         // edit list
         val onItemClickListener = object : RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
@@ -122,7 +130,6 @@ public class WriteFragment : Fragment() {
 
             override fun onLongItemClick(view: View, position: Int) {
                 val card = adapter?.getItem(position) as Card
-
             }
         }
         recyView.addOnItemTouchListener(RecyclerItemClickListener(v.context, recyView, onItemClickListener))
@@ -140,7 +147,9 @@ public class WriteFragment : Fragment() {
                 ItemTouchHelper.DOWN or ItemTouchHelper.UP,
                 ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT) {
 
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            override fun onMove(recyclerView: RecyclerView,
+                                viewHolder: RecyclerView.ViewHolder,
+                                target: RecyclerView.ViewHolder): Boolean {
                 val fromPos  = viewHolder.adapterPosition
                 val toPos    = target.adapterPosition
                 adapter?.notifyItemMoved(fromPos, toPos)
@@ -179,7 +188,7 @@ public class WriteFragment : Fragment() {
     }
 
 
-    public fun deArchiveThisCard(card: Card?){
+    fun deArchiveThisCard(card: Card?){
         if(card != null){
             val currentDate = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
             val oldDate = card.getDateStr()
@@ -189,15 +198,19 @@ public class WriteFragment : Fragment() {
         }
     }
 
-    public interface OnWriteCardChangeListener {
+    fun setOnWriteCardChangeListener (listener: OnWriteCardChangeListener){
+        cardChangeListener = listener
+    }
 
-        public fun onWriteCardCreated()
+    interface OnWriteCardChangeListener {
 
-        public fun onWriteCardDeleted()
+        fun onWriteCardCreated()
 
-        public fun onWriteCardRevised()
+        fun onWriteCardDeleted()
 
-        public fun onWriteCardArchived(card: Card?)
+        fun onWriteCardRevised()
+
+        fun onWriteCardArchived(card: Card?)
 
     }
 

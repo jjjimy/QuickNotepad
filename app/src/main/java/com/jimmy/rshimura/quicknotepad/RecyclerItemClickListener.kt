@@ -10,7 +10,10 @@ import android.view.View
 /**
  * Created by rshimura on 2017/07/12.
  */
-class RecyclerItemClickListener(val context: Context, recyclerView: RecyclerView, val mListener: OnItemClickListener?) : RecyclerView.OnItemTouchListener {
+class RecyclerItemClickListener(val context: Context,
+                                recyclerView: RecyclerView,
+                                val mListener: OnItemClickListener?)
+    : RecyclerView.OnItemTouchListener {
 
     interface OnItemClickListener {
         fun onItemClick(view: View, position: Int)
@@ -21,7 +24,8 @@ class RecyclerItemClickListener(val context: Context, recyclerView: RecyclerView
     internal var mGestureDetector: GestureDetector
 
     init {
-        mGestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
+        mGestureDetector = GestureDetector(context,
+                object : GestureDetector.SimpleOnGestureListener() {
             override fun onSingleTapUp(e: MotionEvent): Boolean {
                 return true
             }
