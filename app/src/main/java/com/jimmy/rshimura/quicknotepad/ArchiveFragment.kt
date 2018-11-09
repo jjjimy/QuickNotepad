@@ -1,6 +1,5 @@
 package com.jimmy.rshimura.quicknotepad
 
-import android.content.Context
 import android.graphics.Canvas
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -16,14 +15,14 @@ import java.util.*
 /**
  * Created by rshimura on 2017/07/08.
  */
-public class LookFragment : Fragment() {
+public class ArchibeFragment : Fragment() {
     private val itemList: MutableList<Card> = mutableListOf()
     private var adapter : RecylerCardAdapter? = null
 
     private var cardChangeListener: OnArchiveCardChangeListener? = null
     companion object {
         fun getInstance(): Fragment {
-            return LookFragment() as Fragment
+            return ArchibeFragment() as Fragment
         }
     }
 

@@ -3,12 +3,10 @@ package com.jimmy.rshimura.quicknotepad
 import android.support.v4.app.FragmentManager
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.widget.SearchView
@@ -18,7 +16,7 @@ class MainActivity() : AppCompatActivity(){
 
     private val fragMgr: FragmentManager = supportFragmentManager
     private val writeFrag = WriteFragment()
-    private val archFrag = LookFragment()
+    private val archFrag = ArchibeFragment()
     private val logFrag   = LogFragment()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,7 +86,7 @@ class MainActivity() : AppCompatActivity(){
                 logFrag.pushLog("ARC")
             }
         })
-        archFrag.setOnArchiveCardChangeListener(object: LookFragment.OnArchiveCardChangeListener{
+        archFrag.setOnArchiveCardChangeListener(object: ArchibeFragment.OnArchiveCardChangeListener{
             // archiveFragment Event
             override fun onArchiveCardDearchived(card: Card?) {
                 writeFrag.deArchiveThisCard(card)
