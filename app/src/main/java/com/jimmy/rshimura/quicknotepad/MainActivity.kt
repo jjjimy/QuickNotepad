@@ -27,7 +27,6 @@ class MainActivity() : AppCompatActivity(){
         // Toolbar setting
         val myToolbar = findViewById(R.id.my_toolbar) as Toolbar
         setSupportActionBar(myToolbar)
-        myToolbar.setBackgroundResource(R.drawable.memo_header)
         val navigation = findViewById(R.id.navigation) as BottomNavigationView
         fragMgr.beginTransaction().add(R.id.fragmentContainer, writeFrag, "write")
                                   .add(R.id.fragmentContainer, archFrag, "look")
@@ -48,17 +47,14 @@ class MainActivity() : AppCompatActivity(){
             }
             when (item.itemId){
                 R.id.navigation_home -> {
-                    myToolbar.setBackgroundResource(R.drawable.memo_header)
                     fragMgr.beginTransaction().show(writeFrag).commit()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_dashboard -> {
-                    myToolbar.setBackgroundResource((R.drawable.archive_header))
                     fragMgr.beginTransaction().show(archFrag).commit()
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_notifications -> {
-                    myToolbar.setBackgroundResource(R.drawable.log_header)
                     fragMgr.beginTransaction().show(logFrag).commit()
                     return@setOnNavigationItemSelectedListener true
                 }
@@ -107,7 +103,6 @@ class MainActivity() : AppCompatActivity(){
         inflater.inflate(R.menu.actionbar, menu)
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = MenuItemCompat.getActionView(searchItem) as SearchView
-        searchView.setBackgroundResource(R.drawable.search_header)
         return true
     }
 

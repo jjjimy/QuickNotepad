@@ -81,15 +81,6 @@ public class WriteFragment : Fragment() {
                 itemList.add(inputCard)
                 adapter?.notifyDataSetChanged()
                 cardChangeListener?.onWriteCardCreated()
-                try {
-                    val stream = v.context.openFileOutput("current_list.dat", MODE_APPEND)
-                    val streamWriter = OutputStreamWriter(stream)
-                    val writer = BufferedWriter(streamWriter)
-                    writer.append(inputStr)
-                    writer.close()
-                }catch (e: IOException){
-                    e.printStackTrace()
-                }
                 inputText.setText("")
             }
             else {
