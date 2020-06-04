@@ -1,39 +1,39 @@
 package com.jimmy.rshimura.quicknotepad
 
-import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.content.Context
-import android.content.Context.MODE_APPEND
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.*
-import java.util.*
 import android.graphics.Canvas
+import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.KeyEvent
-import android.support.v7.widget.RecyclerView
-import android.widget.Toast
-import android.support.design.widget.SwipeDismissBehavior
-import android.support.design.widget.CoordinatorLayout;
-import java.io.BufferedWriter
-import java.io.IOException
-import java.io.OutputStream
-import java.io.OutputStreamWriter
-import java.security.Key
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import java.util.*
 
+
+//TODO: 他のところをさわっと時の挙動
+//TODO: FABを３色ボタンに展開
+//TODO: BottomSheetの代わりにBottomDialog
+//TODO: keyboardを閉じた時に、BottomSheetを閉じる。
 
 /**
  * Created by rshimura on 2017/07/08.
  */
 public class WriteFragment : Fragment() {
 
-    private var cardChangeListener: OnWriteCardChangeListener? = null
+    // get listener/list/adapter instance as class var with NULL.
+    private lateinit var cardChangeListener: OnWriteCardChangeListener
     private var itemList: MutableList<Card>  = mutableListOf()
-    private var adapter : RecylerCardAdapter? = null
+    private lateinit var adapter : RecylerCardAdapter
+    private lateinit var bottomSheet: View
+    private lateinit var behavior: BottomSheetBehavior<View>
 
     companion object {
         fun getInstance(): Fragment {
@@ -49,6 +49,14 @@ public class WriteFragment : Fragment() {
         adapter  = RecylerCardAdapter(v.context, itemList, R.layout.item_view)
         val recyView : RecyclerView = v.findViewById(R.id.todolist) as RecyclerView
 
+
+        // bottom sheet
+        bottomSheet = v.findViewById(R.id.bottom_sheet)
+        behavior = BottomSheetBehavior.from(bottomSheet)
+        behavior.isHideable = true
+        behavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        defFabAction(v)
         defSwipeAction(v, recyView)
         defListAction(v,  recyView)
 
@@ -62,9 +70,26 @@ public class WriteFragment : Fragment() {
     */
     override fun onDetach() {
         super.onDetach()
-        cardChangeListener = null
+        // 20.6.4 by rshimura
+        // I think cardChangeListener shouldn't be null,
+        // and comment out the follow line, but comment in if some problem occur
+        //cardChangeListener = null
     }
 
+    private fun defFabAction(v: View) {
+        // config floating button
+        val cFab: View = v.findViewById(R.id.createFloating)
+        cFab.setOnClickListener { view: View ->
+            Log.d("FAB", behavior.state.toString())
+            if (behavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                behavior.state = BottomSheetBehavior.STATE_HIDDEN
+                Log.d("FAB", behavior.state.toString())
+            } else {
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                Log.d("FAB", behavior.state.toString())
+            }
+        }
+    }
 
     private fun defListAction(v: View, recyView: RecyclerView) {
         // input text and add list
@@ -74,28 +99,30 @@ public class WriteFragment : Fragment() {
         // def btn action
 
         val pushAction = { v: View ->
-            val inputStr = inputText.text.toString()
+            val inputStr = inputText?.text.toString()
             val currentDate = DateFormat.format("yyyy/MM/dd/kk:mm", Calendar.getInstance())
-            if (editCard == null){
-                val inputCard: Card = Card(inputStr, currentDate.toString())
-                itemList.add(inputCard)
-                adapter?.notifyDataSetChanged()
-                cardChangeListener?.onWriteCardCreated()
-                inputText.setText("")
-            }
-            else {
-                val card = editCard as Card
-                if (card.todo != inputStr){
-                    card.todo = inputStr
-                    adapter?.notifyDataSetChanged()
-                    cardChangeListener?.onWriteCardRevised()
-                    card.date = currentDate.toString()
+            // check if is the inputStr empty ?
+            if (inputStr != "") {
+                if (editCard == null) {
+                    val inputCard: Card = Card(inputStr, currentDate.toString())
+                    itemList.add(inputCard)
+                    adapter.notifyDataSetChanged()
+                    cardChangeListener.onWriteCardCreated()
+                    inputText?.setText("")
+                } else {
+                    val card = editCard as Card
+                    if (card.todo != inputStr) {
+                        card.todo = inputStr
+                        adapter.notifyDataSetChanged()
+                        cardChangeListener.onWriteCardRevised()
+                        card.date = currentDate.toString()
+                    }
+                    editCard = null
+                    inputText?.setText("")
+                    //goBtn.setText("Go")
                 }
-                editCard = null
-                inputText.setText("")
-                //goBtn.setText("Go")
+                recyView.scrollToPosition(adapter.getTailIndex()!!)
             }
-            recyView.scrollToPosition(adapter?.getTailIndex()!!)
         }
 
 
@@ -108,19 +135,20 @@ public class WriteFragment : Fragment() {
         }
 
         // add list
-        goBtn.setOnClickListener(pushAction)
-        inputText.setOnKeyListener(enterAction)
+        goBtn?.setOnClickListener(pushAction)
+        inputText?.setOnKeyListener(enterAction)
         // edit list
         val onItemClickListener = object : RecyclerItemClickListener.OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
-                val card: Card? = adapter?.getItem(position)
-                inputText.setText(card?.getTodoStr())
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                val card: Card? = adapter.getItem(position)
+                inputText?.setText(card?.getTodoStr())
                 editCard = card
                 //goBtn.setText("Re")
             }
 
             override fun onLongItemClick(view: View, position: Int) {
-                val card = adapter?.getItem(position) as Card
+                val card = adapter.getItem(position) as Card
             }
         }
         recyView.addOnItemTouchListener(RecyclerItemClickListener(v.context, recyView, onItemClickListener))
@@ -143,7 +171,7 @@ public class WriteFragment : Fragment() {
                                 target: RecyclerView.ViewHolder): Boolean {
                 val fromPos  = viewHolder.adapterPosition
                 val toPos    = target.adapterPosition
-                adapter?.notifyItemMoved(fromPos, toPos)
+                adapter.notifyItemMoved(fromPos, toPos)
                 return true
             }
 
@@ -154,16 +182,16 @@ public class WriteFragment : Fragment() {
                         val view = viewHolder as RecylerCardAdapter.ViewHolder
                         //view.setDeleteBg()
                         itemList.removeAt(position)
-                        adapter?.notifyDataSetChanged()
-                        cardChangeListener?.onWriteCardDeleted()
+                        adapter.notifyDataSetChanged()
+                        cardChangeListener.onWriteCardDeleted()
                     }
                     ItemTouchHelper.RIGHT -> {
                         val position = viewHolder.adapterPosition
-                        val card = adapter?.getItem(position) as Card
+                        val card = adapter.getItem(position) as Card
                         //(viewHolder as RecylerCardAdapter.ViewHolder).setDeleteBg()
                         itemList.removeAt(position)
-                        adapter?.notifyDataSetChanged()
-                        cardChangeListener?.onWriteCardArchived(card)
+                        adapter.notifyDataSetChanged()
+                        cardChangeListener.onWriteCardArchived(card)
                     }
 
                 }
